@@ -82,7 +82,7 @@ func (cr *CategoryRepository) Update(category model.Category) error {
 	statement := `
 		UPDATE categories
 		SET
-			name = $1, description = $2
+			name = $1, description = $2, updated_at = CURRENT_TIMESTAMP
 		WHERE
 			id = $3
 	`
@@ -97,7 +97,9 @@ func (cr *CategoryRepository) Update(category model.Category) error {
 
 func (cr *CategoryRepository) Delete(id int) error {
 	statement := `
-		DELETE FROM categories
+		UPDATE categories
+		SET
+			updated_at = CURRENT_TIMESTAMP, deleted_at = CURRENT_TIMESTAMP
 		WHERE id = $1
 	`
 	_, err := cr.DBConn.Queryx(statement, id)

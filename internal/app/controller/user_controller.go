@@ -9,15 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CategoryController struct {
-	service service.ICategoryService
+type UserController struct {
+	service service.IUserService
 }
 
-func NewCategoryController(service service.ICategoryService) *CategoryController {
-	return &CategoryController{service: service}
+func NewUserController(service service.IUserService) *UserController {
+	return &UserController{service: service}
 }
 
-func (cc *CategoryController) BrowseCategory(ctx *gin.Context) {
+func (cc *UserController) BrowseUser(ctx *gin.Context) {
 	resp, err := cc.service.BrowseAll()
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": gin.H{"message": err.Error()}})
@@ -28,7 +28,7 @@ func (cc *CategoryController) BrowseCategory(ctx *gin.Context) {
 	return
 }
 
-func (cc *CategoryController) GetByIdCategory(ctx *gin.Context) {
+func (cc *UserController) GetByIdUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
@@ -46,8 +46,8 @@ func (cc *CategoryController) GetByIdCategory(ctx *gin.Context) {
 	return
 }
 
-func (cc *CategoryController) CreateCategory(ctx *gin.Context) {
-	var req schema.CreateCategoryReq
+func (cc *UserController) CreateUser(ctx *gin.Context) {
+	var req schema.CreateUserReq
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
@@ -60,18 +60,18 @@ func (cc *CategoryController) CreateCategory(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "success create category"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "success create User"})
 	return
 }
 
-func (cc *CategoryController) UpdateCategory(ctx *gin.Context) {
+func (cc *UserController) UpdateUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 		return
 	}
 
-	var req schema.CreateCategoryReq
+	var req schema.CreateUserReq
 	err = ctx.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
@@ -84,11 +84,11 @@ func (cc *CategoryController) UpdateCategory(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "success update category"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "success update User"})
 	return
 }
 
-func (cc *CategoryController) DeleteCategory(ctx *gin.Context) {
+func (cc *UserController) DeleteUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
@@ -101,6 +101,6 @@ func (cc *CategoryController) DeleteCategory(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "success delete category"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "success delete User"})
 	return
 }

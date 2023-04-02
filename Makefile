@@ -5,23 +5,23 @@ help: ## You are here! showing all command documenentation.
 #== Env Variables ==#
 #===================#
 DOCKER_COMPOSE_FILE ?= docker-compose.yaml
-
+user ?= root
 
 #========================#
 #== DATABASE MIGRATION ==#
 #========================#
 
 migrate-up: ## Run migrations UP
-	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --rm migrate up
+	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --user=$(user) --rm migrate up
 
 migrate-down: ## Rollback migrations, latest migration (1)
-	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --rm migrate down 1
+	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --user=$(user) --rm migrate down 1
 
 migrate-all: ## Rollback migrations, all migrations
-	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --rm migrate down 1
+	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --user=$(user) --rm migrate down 1
 
 migrate-create: ## Create a DB migration files e.g `make migrate-create name=migration-name`
-	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --rm migrate create -ext sql -dir /migrations $(name)
+	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --user=$(user) --rm migrate create -ext sql -dir /migrations $(name)
 
 shell-db: ## Enter to database console
 	docker compose -f ${DOCKER_COMPOSE_FILE} exec db psql -U postgres -d postgres
