@@ -1,0 +1,44 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+    - 5455:5455
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=dev_store
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+  
+  migrate:
+    profiles: ["tools"]
+    build:
+      context: ./docker
+      dockerfile: migrate.dockerfile
+      args:
+        - UID=1000
+        - GID=1000
+        - USER=mdzk
+    volumes:
+      - ./db/migrations:/migrations
+    entrypoint: 
+      [
+        "migrate",
+        "-path",
+        "/migrations",
+        "-database",
+        "postgres://postgres:postgres@db:5455/dev_store?sslmode=disable",
+      ]
+    command: ["up"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
