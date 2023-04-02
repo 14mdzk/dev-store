@@ -4,7 +4,7 @@ services:
     image: postgres:latest
     restart: always
     ports:
-    - 5455:5455
+    - 5455:5432
     volumes:
     - postgres_data:/var/lib/postgresql/data
     environment:
@@ -33,7 +33,7 @@ services:
         "-path",
         "/migrations",
         "-database",
-        "postgres://postgres:postgres@db:5455/dev_store?sslmode=disable",
+        "postgres://postgres:postgres@db:5432/dev_store?sslmode=disable",
       ]
     command: ["up"]
     depends_on:

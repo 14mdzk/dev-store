@@ -1,11 +1,13 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+)
 
 type Config struct {
-	DBDriver     string `mapstruct:"DB_DRIVER"`
-	DBConnection string `mapstruct:"DB_CONNECTION"`
-	ServerPort   string `mapstruct:"SERVER_PORT"`
+	DBDriver     string `mapstructure:"DB_DRIVER"`
+	DBConnection string `mapstructure:"DB_CONNECTION"`
+	ServerPort   string `mapstructure:"SERVER_PORT"`
 }
 
 func LoadConfig(fileConfigPath string) (Config, error) {
@@ -21,6 +23,7 @@ func LoadConfig(fileConfigPath string) (Config, error) {
 		return config, err
 	}
 
-	viper.Unmarshal(config)
+	viper.Unmarshal(&config)
+
 	return config, nil
 }

@@ -1,17 +1,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"net/http"
 
-	"github.com/14mdzk/devstore/internal/pkg/config"
-	"github.com/14mdzk/devstore/internal/pkg/db"
+	"github.com/14mdzk/dev-store/internal/app/controller"
+	"github.com/14mdzk/dev-store/internal/app/repository"
+	"github.com/14mdzk/dev-store/internal/app/service"
+	"github.com/14mdzk/dev-store/internal/pkg/config"
+	"github.com/14mdzk/dev-store/internal/pkg/db"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
 
-var cfg config.Config
-var DBConn *sqlx.DB
+var (
+	cfg    config.Config
+	DBConn *sqlx.DB
+)
 
 func init() {
 	configLoad, err := config.LoadConfig(".")
@@ -30,8 +35,17 @@ func init() {
 
 func main() {
 	r := gin.Default()
-	r.GET("/ping", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{"message": "pong"})
-	})
-	r.Run()
+
+	categoryRepository := repository.NewCategoryRepository(DBConn)
+	categoryService := service.NewCategoryService(categoryRepository)
+	categoryController := controller.NewCategoryController(categoryService)
+
+	r.GET("/categories", categoryController.BrowseCategory)
+	r.POST("/categories", categoryController.CreateCategory)
+	r.GET("/categories/:id", categoryController.GetByIdCategory)
+	r.DELETE("/categories/:id", categoryController.DeleteCategory)
+	r.PATCH("/categories/:id", categoryController.UpdateCategory)
+
+	appPort := fmt.Sprintf(":%s", cfg.ServerPort)
+	r.Run(appPort)
 }
