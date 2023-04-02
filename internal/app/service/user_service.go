@@ -69,11 +69,6 @@ func (cs *UserService) Create(req schema.CreateUserReq) error {
 }
 
 func (cs *UserService) Update(id int, req schema.CreateUserReq) error {
-	// user.ID = id
-	// user.Username = req.Username
-	// user.Email = req.Email
-	// user.Password = req.Password
-
 	user, err := cs.repo.GetById(id)
 	if err != nil {
 		return err

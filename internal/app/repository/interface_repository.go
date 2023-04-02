@@ -17,3 +17,11 @@ type IUserRepository interface {
 	Update(model.User) error
 	Delete(id int) error
 }
+
+type IProductRepository interface {
+	Browse() ([]model.Product, error)
+	GetById(id int) (model.Product, error)
+	Create(model.Product) error
+	Update(model.Product) error
+	Delete(id int) error
+}

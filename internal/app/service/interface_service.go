@@ -17,3 +17,11 @@ type IUserService interface {
 	Update(id int, req schema.CreateUserReq) error
 	Delete(id int) error
 }
+
+type IProductService interface {
+	BrowseAll() ([]schema.GetProductResp, error)
+	GetById(id int) (schema.GetProductResp, error)
+	Create(req schema.CreateProductReq) error
+	Update(id int, req schema.CreateProductReq) error
+	Delete(id int) error
+}

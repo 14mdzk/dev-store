@@ -43,6 +43,10 @@ func main() {
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService)
 
+	productRepository := repository.NewProductRepository(DBConn)
+	productService := service.NewProductService(productRepository)
+	productController := controller.NewProductController(productService)
+
 	r.GET("/categories", categoryController.BrowseCategory)
 	r.POST("/categories", categoryController.CreateCategory)
 	r.GET("/categories/:id", categoryController.GetByIdCategory)
@@ -54,6 +58,12 @@ func main() {
 	r.GET("/users/:id", userController.GetByIdUser)
 	r.DELETE("/users/:id", userController.DeleteUser)
 	r.PATCH("/users/:id", userController.UpdateUser)
+
+	r.GET("/products", productController.BrowseProduct)
+	r.POST("/products", productController.CreateProduct)
+	r.GET("/products/:id", productController.GetByIdProduct)
+	r.DELETE("/products/:id", productController.DeleteProduct)
+	r.PATCH("/products/:id", productController.UpdateProduct)
 
 	appPort := fmt.Sprintf(":%s", cfg.ServerPort)
 	r.Run(appPort)
