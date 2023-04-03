@@ -18,6 +18,14 @@ type IUserRepository interface {
 	Delete(id int) error
 }
 
+type IUserAddressRepository interface {
+	Browse(userId int) ([]model.UserAddress, error)
+	GetById(id int, userId int) (model.UserAddress, error)
+	Create(model.UserAddress) error
+	Update(model.UserAddress) error
+	Delete(id int, userId int) error
+}
+
 type IProductRepository interface {
 	Browse() ([]model.Product, error)
 	GetById(id int) (model.Product, error)

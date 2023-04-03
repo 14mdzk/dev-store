@@ -18,6 +18,14 @@ type IUserService interface {
 	Delete(id int) error
 }
 
+type IUserAddressService interface {
+	BrowseAll(userId int) ([]schema.GetUserAddressResp, error)
+	GetById(id int, userId int) (schema.GetUserAddressResp, error)
+	Create(userId int, req schema.CreateUserAddressReq) error
+	Update(id int, userId int, req schema.CreateUserAddressReq) error
+	Delete(id int, userId int) error
+}
+
 type IProductService interface {
 	BrowseAll() ([]schema.GetProductResp, error)
 	GetById(id int) (schema.GetProductResp, error)

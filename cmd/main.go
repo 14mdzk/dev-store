@@ -39,9 +39,13 @@ func main() {
 	categoryRepository := repository.NewCategoryRepository(DBConn)
 	categoryService := service.NewCategoryService(categoryRepository)
 	categoryController := controller.NewCategoryController(categoryService)
+
 	userRepository := repository.NewUserRepository(DBConn)
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService)
+	userAddressRepository := repository.NewUserAddressRepository(DBConn)
+	userAddressService := service.NewUserAddressService(userAddressRepository, userRepository)
+	userAddressController := controller.NewUserAddressController(userAddressService)
 
 	productRepository := repository.NewProductRepository(DBConn)
 	productService := service.NewProductService(productRepository)
@@ -58,6 +62,12 @@ func main() {
 	r.GET("/users/:id", userController.GetByIdUser)
 	r.DELETE("/users/:id", userController.DeleteUser)
 	r.PATCH("/users/:id", userController.UpdateUser)
+
+	r.GET("/users/:id/addresses", userAddressController.BrowseUserAddress)
+	r.POST("/users/:id/addresses", userAddressController.CreateUserAddress)
+	r.GET("/users/:id/addresses/:addressId", userAddressController.GetByIdUserAddress)
+	r.PATCH("/users/:id/addresses/:addressId", userAddressController.UpdateUserAddress)
+	r.DELETE("/users/:id/addresses/:addressId", userAddressController.DeleteUserAddress)
 
 	r.GET("/products", productController.BrowseProduct)
 	r.POST("/products", productController.CreateProduct)

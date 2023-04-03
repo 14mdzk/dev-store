@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS user_addresses(
     postal_code VARCHAR(20),
     phone VARCHAR(20),
     note TEXT,
+    is_main BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ,
     deleted_at TIMESTAMPTZ,
