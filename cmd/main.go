@@ -51,6 +51,10 @@ func main() {
 	productService := service.NewProductService(productRepository)
 	productController := controller.NewProductController(productService)
 
+	shoppingCartRepository := repository.NewShoppingCartRepository(DBConn)
+	shoppingCartService := service.NewShoppingCartService(shoppingCartRepository)
+	shoppingCartController := controller.NewShoppingCartController(shoppingCartService)
+
 	r.GET("/categories", categoryController.BrowseCategory)
 	r.POST("/categories", categoryController.CreateCategory)
 	r.GET("/categories/:id", categoryController.GetByIdCategory)
@@ -74,6 +78,12 @@ func main() {
 	r.GET("/products/:id", productController.GetByIdProduct)
 	r.DELETE("/products/:id", productController.DeleteProduct)
 	r.PATCH("/products/:id", productController.UpdateProduct)
+
+	r.GET("/cart", shoppingCartController.BrowseCart)
+	// r.POST("/cart", shoppingCartController.BrowseCart)
+	// r.GET("/cart/:id", shoppingCartController.BrowseCart)
+	// r.DELETE("/cart/:id", shoppingCartController.BrowseCart)
+	// r.PATCH("/cart/:id", shoppingCartController.BrowseCart)
 
 	appPort := fmt.Sprintf(":%s", cfg.ServerPort)
 	r.Run(appPort)

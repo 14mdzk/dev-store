@@ -33,3 +33,9 @@ type IProductRepository interface {
 	Update(model.Product) error
 	Delete(id int) error
 }
+
+type IShoppingCartRepository interface {
+	Browse(userId int) (model.ShoppingCart, error)
+	Create(userId int, cart model.ShoppingCart) error
+	GetItemById(userId int, itemId int) (model.ShoppingCartItem, error)
+}

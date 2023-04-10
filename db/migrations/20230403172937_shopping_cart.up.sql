@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS shopping_carts(
+    id BIGSERIAL PRIMARY KEY NOT NULL,
+    user_id BIGINT NOT NULL,
+    total NUMERIC(17,2) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ,
+    deleted_at TIMESTAMPTZ,
+
+    FOREIGN KEY(user_id) REFERENCES users(id)
+)
