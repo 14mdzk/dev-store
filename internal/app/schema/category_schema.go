@@ -7,6 +7,6 @@ type GetCategoryResp struct {
 }
 
 type CreateCategoryReq struct {
-	Name        string
-	Description string
+	Name        string `validate:"required"`
+	Description string `validate:"required"`
 }
