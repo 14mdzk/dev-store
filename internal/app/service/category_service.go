@@ -6,6 +6,7 @@ import (
 	"github.com/14mdzk/dev-store/internal/app/model"
 	"github.com/14mdzk/dev-store/internal/app/repository"
 	"github.com/14mdzk/dev-store/internal/app/schema"
+	"github.com/14mdzk/dev-store/internal/pkg/reason"
 )
 
 type CategoryService struct {
@@ -23,7 +24,7 @@ func (cs *CategoryService) BrowseAll() ([]schema.GetCategoryResp, error) {
 
 	categories, err := cs.repo.Browse()
 	if err != nil {
-		return nil, errors.New("cannot get categories")
+		return nil, errors.New(reason.CategoryNotFound)
 	}
 
 	for _, value := range categories {
@@ -61,7 +62,7 @@ func (cs *CategoryService) Create(req schema.CreateCategoryReq) error {
 
 	err := cs.repo.Create(category)
 	if err != nil {
-		return errors.New("cannot create category")
+		return errors.New(reason.CategoryCreateFailed)
 	}
 
 	return nil
@@ -75,7 +76,7 @@ func (cs *CategoryService) Update(id int, req schema.CreateCategoryReq) error {
 
 	err := cs.repo.Update(category)
 	if err != nil {
-		return errors.New("cannot update category")
+		return errors.New(reason.CategoryUpdateFailed)
 	}
 
 	return nil
@@ -84,7 +85,7 @@ func (cs *CategoryService) Update(id int, req schema.CreateCategoryReq) error {
 func (cs *CategoryService) Delete(id int) error {
 	err := cs.repo.Delete(id)
 	if err != nil {
-		return errors.New("cannot delete category")
+		return errors.New(reason.CategoryDeleteFailed)
 	}
 
 	return nil

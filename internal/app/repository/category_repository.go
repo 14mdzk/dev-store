@@ -39,7 +39,7 @@ func (cr *CategoryRepository) Browse() ([]model.Category, error) {
 		categories []model.Category
 		statement  = `
 			SELECT id, name, description
-			FROM categories LIMIT 0
+			FROM categories
 		`
 	)
 
