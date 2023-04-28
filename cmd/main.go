@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/14mdzk/dev-store/internal/app/controller"
 	"github.com/14mdzk/dev-store/internal/app/repository"
 	"github.com/14mdzk/dev-store/internal/app/service"
 	"github.com/14mdzk/dev-store/internal/pkg/config"
 	"github.com/14mdzk/dev-store/internal/pkg/db"
+	"github.com/14mdzk/dev-store/internal/pkg/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -31,10 +32,20 @@ func init() {
 	}
 
 	DBConn = db
+
+	logLevel, err := log.ParseLevel(cfg.LogLevel)
+	if err != nil {
+		logLevel = log.InfoLevel
+	}
+
+	log.SetLevel(logLevel)
+	log.SetFormatter(&log.JSONFormatter{})
 }
 
 func main() {
-	r := gin.Default()
+	r := gin.New()
+
+	r.Use(middleware.LoggingMiddleware(), middleware.RecoveryMiddleware())
 
 	categoryRepository := repository.NewCategoryRepository(DBConn)
 	categoryService := service.NewCategoryService(categoryRepository)

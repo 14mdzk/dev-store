@@ -15,7 +15,14 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
-  
+      
+  lint:
+    image: golangci/golangci-lint:v1.52.2
+    profiles: ["tools"]
+    volumes:
+      - .:/app
+    working_dir: /app
+
   migrate:
     profiles: ["tools"]
     build:

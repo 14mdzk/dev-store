@@ -33,3 +33,7 @@ environment:
 server: ## Running application
 server:
 	go run cmd/main.go
+
+lint: ## Running golangci-lint for code analysis.
+lint:
+	docker compose -f ${DOCKER_COMPOSE_FILE} --profile tools run --user=$(user) --rm lint golangci-lint run -v
