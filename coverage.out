@@ -1,0 +1,12 @@
+mode: set
+github.com/14mdzk/dev-store/internal/pkg/validator/validator.go:7.13,9.2 1 1
+github.com/14mdzk/dev-store/internal/pkg/validator/validator.go:11.36,14.16 2 1
+github.com/14mdzk/dev-store/internal/pkg/validator/validator.go:14.16,16.3 1 0
+github.com/14mdzk/dev-store/internal/pkg/validator/validator.go:18.2,18.13 1 1
+github.com/14mdzk/dev-store/internal/pkg/middleware/logging_middleware.go:10.42,11.32 1 0
+github.com/14mdzk/dev-store/internal/pkg/middleware/logging_middleware.go:11.32,30.3 10 0
+github.com/14mdzk/dev-store/internal/pkg/middleware/recovery_middleware.go:10.43,11.32 1 1
+github.com/14mdzk/dev-store/internal/pkg/middleware/recovery_middleware.go:11.32,12.16 1 1
+github.com/14mdzk/dev-store/internal/pkg/middleware/recovery_middleware.go:12.16,14.18 2 1
+github.com/14mdzk/dev-store/internal/pkg/middleware/recovery_middleware.go:14.18,16.5 1 1
+github.com/14mdzk/dev-store/internal/pkg/middleware/recovery_middleware.go:19.3,19.13 1 1
