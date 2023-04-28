@@ -16,7 +16,7 @@ func ConnectDB(DBDriver string, DBConn string) (*sqlx.DB, error) {
 	err = db.Ping()
 	if err != nil {
 		return nil, err
-	}
+ 	}
 
 	log.Print("Database connection established")
 

@@ -9,9 +9,9 @@ import (
 )
 
 type ResponseBody struct {
-	Status  string
-	Message string
-	Data    interface{}
+	Status  string      `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 func ResponseError(ctx *gin.Context, statusCode int, message string) {
