@@ -6,6 +6,7 @@ import (
 	"github.com/14mdzk/dev-store/internal/app/model"
 	"github.com/14mdzk/dev-store/internal/app/repository"
 	"github.com/14mdzk/dev-store/internal/app/schema"
+	"github.com/14mdzk/dev-store/internal/pkg/reason"
 )
 
 type ProductService struct {
@@ -23,7 +24,7 @@ func (cs *ProductService) BrowseAll() ([]schema.GetProductResp, error) {
 
 	products, err := cs.repo.Browse()
 	if err != nil {
-		return nil, errors.New("cannot get products")
+		return nil, errors.New(reason.ProductNotFound)
 	}
 
 	for _, product := range products {
@@ -76,7 +77,7 @@ func (cs *ProductService) Create(req schema.CreateProductReq) error {
 
 	err := cs.repo.Create(product)
 	if err != nil {
-		return errors.New("cannot create product")
+		return errors.New(reason.ProductCreateFailed)
 	}
 
 	return nil
@@ -95,7 +96,7 @@ func (cs *ProductService) Update(id int, req schema.CreateProductReq) error {
 
 	err := cs.repo.Update(product)
 	if err != nil {
-		return errors.New("cannot update product")
+		return errors.New(reason.ProductUpdateFailed)
 	}
 
 	return nil
@@ -104,7 +105,7 @@ func (cs *ProductService) Update(id int, req schema.CreateProductReq) error {
 func (cs *ProductService) Delete(id int) error {
 	err := cs.repo.Delete(id)
 	if err != nil {
-		return errors.New("cannot delete Product")
+		return errors.New(reason.ProductDeleteFailed)
 	}
 
 	return nil
