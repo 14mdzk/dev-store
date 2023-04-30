@@ -23,6 +23,15 @@ services:
       - .:/app
     working_dir: /app
 
+  swagger:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8004:8080"
+    volumes:
+      - ./docs:/docs
+    environment:
+      - SWAGGER_JSON=/docs/api.yaml
+      - BASE_URL=/swagger
   migrate:
     profiles: ["tools"]
     build:

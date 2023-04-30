@@ -1,0 +1,52 @@
+get:
+  summary: List of categories.
+  description: To get list of categories data.
+  tags: 
+    - Category
+  responses:
+    200:
+      description: Success get list of categories
+      content:
+        application/json:
+          schema:
+            $ref: './entity.yaml#/schemas/ResponseListCategory'
+
+    400:
+      description: Failed when get list of categories
+      content:
+        application/json:
+          schema:
+            type: object
+            properties: 
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: Failed to get list of categories
+post:
+  summary: Create category data.
+  description: To create category data.
+  tags:
+  - Category
+  responses:
+    201:
+      description: Create category data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "success"
+              message:
+                type: string
+                example: "success create category"
+
+    422:
+      description: Failed when create category data
+      content:
+        application/json:
+          schema:
+            $ref: '../common.yaml#/schemas/ResponseFormRequestInvalid'
