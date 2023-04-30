@@ -6,6 +6,8 @@ import (
 
 	"github.com/14mdzk/dev-store/internal/app/schema"
 	"github.com/14mdzk/dev-store/internal/app/service"
+	"github.com/14mdzk/dev-store/internal/pkg/handler"
+	"github.com/14mdzk/dev-store/internal/pkg/reason"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,87 +22,86 @@ func NewProductController(service service.IProductService) *ProductController {
 func (cc *ProductController) BrowseProduct(ctx *gin.Context) {
 	resp, err := cc.service.BrowseAll()
 	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": gin.H{"message": err.Error()}})
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": resp})
+	handler.ResponseSuccess(ctx, http.StatusOK, "success", resp)
 	return
 }
 
 func (cc *ProductController) GetByIdProduct(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
 	resp, err := cc.service.GetById(id)
 
 	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": resp})
+	handler.ResponseSuccess(ctx, http.StatusOK, "success", resp)
 	return
 }
 
 func (cc *ProductController) CreateProduct(ctx *gin.Context) {
 	var req schema.CreateProductReq
-	err := ctx.ShouldBindJSON(&req)
-	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+	isValid := handler.BindAndCheck(ctx, &req)
+
+	if !isValid {
 		return
 	}
 
-	err = cc.service.Create(req)
+	err := cc.service.Create(req)
 	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "success create Product"})
+	handler.ResponseSuccess(ctx, http.StatusCreated, "success create Product", nil)
 	return
 }
 
 func (cc *ProductController) UpdateProduct(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, reason.ProductNotFound)
 		return
 	}
 
 	var req schema.CreateProductReq
-	err = ctx.ShouldBindJSON(&req)
-	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+	isValid := handler.BindAndCheck(ctx, &req)
+	if !isValid {
 		return
 	}
 
 	err = cc.service.Update(id, req)
 	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "success update Product"})
+	handler.ResponseSuccess(ctx, http.StatusOK, "success update Product", nil)
 	return
 }
 
 func (cc *ProductController) DeleteProduct(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, reason.ProductNotFound)
 		return
 	}
 
 	err = cc.service.Delete(id)
 	if err != nil {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		handler.ResponseError(ctx, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "success delete Product"})
+	handler.ResponseSuccess(ctx, http.StatusOK, "success delete Product", nil)
 	return
 }

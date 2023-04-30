@@ -5,6 +5,7 @@ import (
 
 	"github.com/14mdzk/dev-store/internal/pkg/reason"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 func RecoveryMiddleware() gin.HandlerFunc {
@@ -12,6 +13,7 @@ func RecoveryMiddleware() gin.HandlerFunc {
 		defer func() {
 			err := recover()
 			if err != nil {
+				log.Error(err)
 				ctx.JSON(http.StatusInternalServerError, gin.H{"message": reason.InternalServerError})
 			}
 		}()
