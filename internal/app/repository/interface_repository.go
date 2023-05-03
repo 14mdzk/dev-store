@@ -13,6 +13,7 @@ type ICategoryRepository interface {
 type IUserRepository interface {
 	Browse() ([]model.User, error)
 	GetById(id int) (model.User, error)
+	GetByEmail(email string) (model.User, error)
 	Create(model.User) error
 	Update(model.User) error
 	Delete(id int) error

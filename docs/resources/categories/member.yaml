@@ -1,0 +1,45 @@
+get:
+  summary: Detail of categories.
+  description: To get Detail of categories data.
+  tags: 
+    - Category
+  responses:
+    200:
+      description: Success get Detail of categories
+      content:
+        application/json:
+          schema:
+            $ref: './entity.yaml#/schemas/ResponseDetail'
+
+    404:
+      description: Failed when get detail of categories
+      content:
+        application/json:
+          schema:
+            $ref: '../common.yaml#/schemas/ResponseEntityNotFound'
+patch:
+  summary: Update category data.
+  description: To Update category data.
+  tags:
+  - Category
+  responses:
+    200:
+      description: Update category data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "success"
+              message:
+                type: string
+                example: "success update category"
+
+    422:
+      description: Failed when update category data
+      content:
+        application/json:
+          schema:
+            $ref: '../common.yaml#/schemas/ResponseFormRequestInvalid'

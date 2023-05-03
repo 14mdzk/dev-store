@@ -2,7 +2,8 @@ package repository
 
 import (
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/14mdzk/dev-store/internal/app/model"
 	"github.com/jmoiron/sqlx"
@@ -26,7 +27,7 @@ func (cr *ProductRepository) Create(Product model.Product) error {
 	`
 	_, err := cr.DBConn.Queryx(statement, Product.CategoryId, Product.Name, Product.Description, fmt.Sprintf("%0.2f", Product.Price), Product.Stock, Product.IsActive, Product.Currency)
 	if err != nil {
-		log.Print(fmt.Errorf("error ProductRepository - Create: %w", err))
+		log.Error(fmt.Errorf("error ProductRepository - Create: %w", err))
 		return err
 	}
 
@@ -44,7 +45,7 @@ func (cr *ProductRepository) Browse() ([]model.Product, error) {
 
 	rows, err := cr.DBConn.Queryx(statement)
 	if err != nil {
-		log.Print(fmt.Errorf("error ProductRepository - Browse : %w", err))
+		log.Error(fmt.Errorf("error ProductRepository - Browse : %w", err))
 		return products, err
 	}
 
@@ -71,7 +72,7 @@ func (cr *ProductRepository) GetById(id int) (model.Product, error) {
 
 	err := cr.DBConn.QueryRowx(statement, id).StructScan(&product)
 	if err != nil {
-		log.Print(fmt.Errorf("error ProductRepository - GetById: %w", err))
+		log.Error(fmt.Errorf("error ProductRepository - GetById: %w", err))
 		return product, err
 	}
 
@@ -88,10 +89,10 @@ func (cr *ProductRepository) Update(product model.Product) error {
 			id = $8
 	`
 
-	log.Print(product)
+	log.Error(product)
 	_, err := cr.DBConn.Queryx(statement, product.CategoryId, product.Name, product.Description, fmt.Sprintf("%0.2f", product.Price), product.Stock, product.IsActive, product.Currency, product.ID)
 	if err != nil {
-		log.Print(fmt.Errorf("error ProductRepository - Update: %w", err))
+		log.Error(fmt.Errorf("error ProductRepository - Update: %w", err))
 		return err
 	}
 
@@ -107,7 +108,7 @@ func (cr *ProductRepository) Delete(id int) error {
 	`
 	_, err := cr.DBConn.Queryx(statement, id)
 	if err != nil {
-		log.Print(fmt.Errorf("error ProductRepository - Delete: %w", err))
+		log.Error(fmt.Errorf("error ProductRepository - Delete: %w", err))
 		return err
 	}
 

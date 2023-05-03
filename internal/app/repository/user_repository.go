@@ -2,11 +2,11 @@ package repository
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/14mdzk/dev-store/internal/app/model"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	log "github.com/sirupsen/logrus"
 )
 
 type UserRepository struct {
@@ -26,7 +26,7 @@ func (cr *UserRepository) Create(user model.User) error {
 	`
 	_, err := cr.DBConn.Queryx(statement, user.Username, user.Email, user.Password)
 	if err != nil {
-		log.Print(fmt.Errorf("error UserRepository - Create: %w", err))
+		log.Error(fmt.Errorf("error UserRepository - Create: %w", err))
 		return err
 	}
 
@@ -37,14 +37,14 @@ func (cr *UserRepository) Browse() ([]model.User, error) {
 	var (
 		users     []model.User
 		statement = `
-			SELECT id, username, email, password
+			SELECT id, username, email
 			FROM users
 		`
 	)
 
 	rows, err := cr.DBConn.Queryx(statement)
 	if err != nil {
-		log.Print(fmt.Errorf("error UserRepository - Browse : %w", err))
+		log.Error(fmt.Errorf("error UserRepository - Browse : %w", err))
 		return users, err
 	}
 
@@ -61,7 +61,7 @@ func (cr *UserRepository) GetById(id int) (model.User, error) {
 	var (
 		user      model.User
 		statement = `
-			SELECT id, username, email, password
+			SELECT id, username, email
 			FROM users
 			WHERE
 				id = $1
@@ -71,7 +71,28 @@ func (cr *UserRepository) GetById(id int) (model.User, error) {
 
 	err := cr.DBConn.QueryRowx(statement, id).StructScan(&user)
 	if err != nil {
-		log.Print(fmt.Errorf("error UserRepository - GetById: %w", err))
+		log.Error(fmt.Errorf("error UserRepository - GetById: %w", err))
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (cr *UserRepository) GetByEmail(email string) (model.User, error) {
+	var (
+		user      model.User
+		statement = `
+			SELECT id, username, email
+			FROM users
+			WHERE
+				email = $1
+			LIMIT 1
+		`
+	)
+
+	err := cr.DBConn.QueryRowx(statement, email).StructScan(&user)
+	if err != nil {
+		log.Error(fmt.Errorf("error UserRepository - GetByEmail: %w", err))
 		return user, err
 	}
 
@@ -88,7 +109,7 @@ func (cr *UserRepository) Update(user model.User) error {
 	`
 	_, err := cr.DBConn.Queryx(statement, user.Username, user.Email, user.Password, user.ID)
 	if err != nil {
-		log.Print(fmt.Errorf("error UserRepository - Update: %w", err))
+		log.Error(fmt.Errorf("error UserRepository - Update: %w", err))
 		return err
 	}
 
@@ -104,7 +125,7 @@ func (cr *UserRepository) Delete(id int) error {
 	`
 	_, err := cr.DBConn.Queryx(statement, id)
 	if err != nil {
-		log.Print(fmt.Errorf("error UserRepository - Delete: %w", err))
+		log.Error(fmt.Errorf("error UserRepository - Delete: %w", err))
 		return err
 	}
 

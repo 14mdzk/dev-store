@@ -1,0 +1,30 @@
+schemas:
+  ResponseEntityNotFound:
+    type: object
+    properties:
+      status:
+        type: string
+        example: "failed"
+      message:
+        type: string
+        example: "record not found"
+
+  ResponseFormRequestInvalid:
+    type: object
+    properties:
+      staus:
+        type: string
+        example: "failed"
+      message:
+        type: string
+        example: "request format invalid"
+
+  ResponseIntervalServerError:
+    type: object
+    properties:
+      status:
+        type: string
+        example: "failed"
+      message:
+        type: string
+        example: "internal server error"

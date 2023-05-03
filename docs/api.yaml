@@ -1,0 +1,18 @@
+openapi: 3.0.0
+info:
+  title: Devstore API
+  description: Documentation for devstore API.
+  version: 1.0.0
+servers:
+  - url: http://0.0.0.0:8000
+    description: URL For development server.
+
+tags:
+  - name : Category
+    description: Category CRUD data.
+
+paths:
+  /categories:
+    $ref: "./resources/categories/collection.yaml"
+  /categories/{id}:
+    $ref: "./resources/categories/member.yaml"
