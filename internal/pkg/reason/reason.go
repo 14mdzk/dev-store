@@ -25,6 +25,10 @@ var (
 	ProductDeleteSuccess = "successfully delete product"
 	ProductDeleteFailed  = "failed to delete product"
 
+	RegistrationSuccess = "registration success"
+	RegistrationFailed = "failed to register"
+	UserAlreadyExist   = "user already exists"
+
 	InternalServerError = "internal server error"
 	RequestFormError    = "request format is invalid"
 )

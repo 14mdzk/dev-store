@@ -33,3 +33,7 @@ type IProductService interface {
 	Update(id int, req schema.CreateProductReq) error
 	Delete(id int) error
 }
+
+type IRegistrationService interface {
+	Register(req schema.RegistrationReq) error
+}
