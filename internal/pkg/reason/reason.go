@@ -32,6 +32,7 @@ var (
 
 	RefreshTokenFailed = "failed to refresh token, please check your token"
 	Unauthorized       = "doesn't have authorization to access this resource"
+	InvalidAccess      = "you don't have access to this resource"
 
 	InternalServerError = "internal server error"
 	RequestFormError    = "request format is invalid"

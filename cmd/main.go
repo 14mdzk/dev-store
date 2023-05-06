@@ -9,14 +9,16 @@ import (
 	"github.com/14mdzk/dev-store/internal/pkg/config"
 	"github.com/14mdzk/dev-store/internal/pkg/db"
 	"github.com/14mdzk/dev-store/internal/pkg/middleware"
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	cfg    config.Config
-	DBConn *sqlx.DB
+	cfg      config.Config
+	DBConn   *sqlx.DB
+	enforcer *casbin.Enforcer
 )
 
 func init() {
@@ -32,6 +34,13 @@ func init() {
 	}
 
 	DBConn = db
+
+	e, err := casbin.NewEnforcer("config/rbac_model.conf", "config/policy.csv")
+	if err != nil {
+		log.Panic("cannot init casbin")
+	}
+	fmt.Println("Casbin started")
+	enforcer = e
 
 	logLevel, err := log.ParseLevel(cfg.LogLevel)
 	if err != nil {
@@ -81,6 +90,7 @@ func main() {
 	r.GET("/auth/refresh", sessionController.Refresh)
 
 	r.Use(middleware.AuthMiddleware(tokenMaker))
+	r.Use(middleware.AuthorizationMiddleware("alice", "data1", "read", enforcer))
 
 	r.GET("/auth/logout", sessionController.Logout)
 
