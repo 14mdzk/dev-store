@@ -47,6 +47,13 @@ func main() {
 
 	r.Use(middleware.LoggingMiddleware(), middleware.RecoveryMiddleware())
 
+	tokenMaker := service.NewTokenMaker(
+		cfg.AccessTokenKey,
+		cfg.RefreshTokenKey,
+		cfg.AccessTokenDuration,
+		cfg.RefreshTokenDuration,
+	)
+
 	categoryRepository := repository.NewCategoryRepository(DBConn)
 	categoryService := service.NewCategoryService(categoryRepository)
 	categoryController := controller.NewCategoryController(categoryService)
@@ -64,6 +71,18 @@ func main() {
 
 	registrationService := service.NewRegistrationService(userRepository)
 	registrationController := controller.NewRegistrationController(registrationService)
+
+	authRepository := repository.NewAuthRepository(DBConn)
+	sessionService := service.NewSessionService(userRepository, authRepository, tokenMaker)
+	sessionController := controller.NewSessionController(sessionService, tokenMaker)
+
+	r.POST("/auth/register", registrationController.Register)
+	r.POST("/auth/login", sessionController.Login)
+	r.GET("/auth/refresh", sessionController.Refresh)
+
+	r.Use(middleware.AuthMiddleware(tokenMaker))
+
+	r.GET("/auth/logout", sessionController.Logout)
 
 	r.GET("/categories", categoryController.BrowseCategory)
 	r.POST("/categories", categoryController.CreateCategory)
@@ -88,8 +107,6 @@ func main() {
 	r.GET("/products/:id", productController.GetByIdProduct)
 	r.DELETE("/products/:id", productController.DeleteProduct)
 	r.PATCH("/products/:id", productController.UpdateProduct)
-
-	r.POST("/register", registrationController.Register)
 
 	appPort := fmt.Sprintf(":%s", cfg.ServerPort)
 	r.Run(appPort)

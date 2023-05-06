@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS auths(
     user_id BIGINT NOT NULL,
     token VARCHAR NOT NULL,
     auth_type VARCHAR NOT NULL,
-
+    expired_at TIMESTAMPTZ NOT NULL,
+    
     FOREIGN KEY(user_id) REFERENCES users(id)
 )

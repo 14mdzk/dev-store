@@ -82,7 +82,7 @@ func (cr *UserRepository) GetByEmail(email string) (model.User, error) {
 	var (
 		user      model.User
 		statement = `
-			SELECT id, username, email
+			SELECT id, username, email, password
 			FROM users
 			WHERE
 				email = $1
