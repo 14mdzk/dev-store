@@ -27,7 +27,6 @@ func (cc *ProductController) BrowseProduct(ctx *gin.Context) {
 	}
 
 	handler.ResponseSuccess(ctx, http.StatusOK, "success", resp)
-	return
 }
 
 func (cc *ProductController) GetByIdProduct(ctx *gin.Context) {
@@ -45,14 +44,12 @@ func (cc *ProductController) GetByIdProduct(ctx *gin.Context) {
 	}
 
 	handler.ResponseSuccess(ctx, http.StatusOK, "success", resp)
-	return
 }
 
 func (cc *ProductController) CreateProduct(ctx *gin.Context) {
 	var req schema.CreateProductReq
-	isValid := handler.BindAndCheck(ctx, &req)
 
-	if !isValid {
+	if !handler.BindAndCheck(ctx, &req) {
 		return
 	}
 
@@ -63,7 +60,6 @@ func (cc *ProductController) CreateProduct(ctx *gin.Context) {
 	}
 
 	handler.ResponseSuccess(ctx, http.StatusCreated, "success create Product", nil)
-	return
 }
 
 func (cc *ProductController) UpdateProduct(ctx *gin.Context) {
@@ -74,8 +70,7 @@ func (cc *ProductController) UpdateProduct(ctx *gin.Context) {
 	}
 
 	var req schema.CreateProductReq
-	isValid := handler.BindAndCheck(ctx, &req)
-	if !isValid {
+	if !handler.BindAndCheck(ctx, &req) {
 		return
 	}
 
@@ -86,7 +81,6 @@ func (cc *ProductController) UpdateProduct(ctx *gin.Context) {
 	}
 
 	handler.ResponseSuccess(ctx, http.StatusOK, "success update Product", nil)
-	return
 }
 
 func (cc *ProductController) DeleteProduct(ctx *gin.Context) {
@@ -103,5 +97,4 @@ func (cc *ProductController) DeleteProduct(ctx *gin.Context) {
 	}
 
 	handler.ResponseSuccess(ctx, http.StatusOK, "success delete Product", nil)
-	return
 }

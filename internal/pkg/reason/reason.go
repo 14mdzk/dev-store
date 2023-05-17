@@ -26,8 +26,13 @@ var (
 	ProductDeleteFailed  = "failed to delete product"
 
 	RegistrationSuccess = "registration success"
-	RegistrationFailed = "failed to register"
-	UserAlreadyExist   = "user already exists"
+	RegistrationFailed  = "failed to register"
+	UserAlreadyExist    = "user already exists"
+	LoginFailed         = "failed login, please make sure your email and password match"
+
+	RefreshTokenFailed = "failed to refresh token, please check your token"
+	Unauthorized       = "doesn't have authorization to access this resource"
+	InvalidAccess      = "you don't have access to this resource"
 
 	InternalServerError = "internal server error"
 	RequestFormError    = "request format is invalid"

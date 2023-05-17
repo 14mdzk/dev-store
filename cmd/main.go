@@ -9,14 +9,16 @@ import (
 	"github.com/14mdzk/dev-store/internal/pkg/config"
 	"github.com/14mdzk/dev-store/internal/pkg/db"
 	"github.com/14mdzk/dev-store/internal/pkg/middleware"
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
 )
 
 var (
-	cfg    config.Config
-	DBConn *sqlx.DB
+	cfg      config.Config
+	DBConn   *sqlx.DB
+	enforcer *casbin.Enforcer
 )
 
 func init() {
@@ -33,6 +35,13 @@ func init() {
 
 	DBConn = db
 
+	e, err := casbin.NewEnforcer("config/rbac_model.conf", "config/policy.csv")
+	if err != nil {
+		log.Panic("cannot init casbin")
+	}
+	fmt.Println("Casbin started")
+	enforcer = e
+
 	logLevel, err := log.ParseLevel(cfg.LogLevel)
 	if err != nil {
 		logLevel = log.InfoLevel
@@ -46,6 +55,13 @@ func main() {
 	r := gin.New()
 
 	r.Use(middleware.LoggingMiddleware(), middleware.RecoveryMiddleware())
+
+	tokenMaker := service.NewTokenMaker(
+		cfg.AccessTokenKey,
+		cfg.RefreshTokenKey,
+		cfg.AccessTokenDuration,
+		cfg.RefreshTokenDuration,
+	)
 
 	categoryRepository := repository.NewCategoryRepository(DBConn)
 	categoryService := service.NewCategoryService(categoryRepository)
@@ -64,6 +80,19 @@ func main() {
 
 	registrationService := service.NewRegistrationService(userRepository)
 	registrationController := controller.NewRegistrationController(registrationService)
+
+	authRepository := repository.NewAuthRepository(DBConn)
+	sessionService := service.NewSessionService(userRepository, authRepository, tokenMaker)
+	sessionController := controller.NewSessionController(sessionService, tokenMaker)
+
+	r.POST("/auth/register", registrationController.Register)
+	r.POST("/auth/login", sessionController.Login)
+	r.GET("/auth/refresh", sessionController.Refresh)
+
+	r.Use(middleware.AuthMiddleware(tokenMaker))
+	r.Use(middleware.AuthorizationMiddleware("alice", "data1", "read", enforcer))
+
+	r.GET("/auth/logout", sessionController.Logout)
 
 	r.GET("/categories", categoryController.BrowseCategory)
 	r.POST("/categories", categoryController.CreateCategory)
@@ -88,8 +117,6 @@ func main() {
 	r.GET("/products/:id", productController.GetByIdProduct)
 	r.DELETE("/products/:id", productController.DeleteProduct)
 	r.PATCH("/products/:id", productController.UpdateProduct)
-
-	r.POST("/register", registrationController.Register)
 
 	appPort := fmt.Sprintf(":%s", cfg.ServerPort)
 	r.Run(appPort)
